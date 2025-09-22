@@ -4,42 +4,33 @@
  *
  * @format
  */
-
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import 'react-native-gesture-handler';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import AppNavigator from './src/navigations/AppNavigator';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from './src/utils/utils';
+import { AuthProvider } from './src/contexts/AuthContext';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { StyleSheet } from 'react-native';
 
 function App() {
-  const isDarkMode = useColorScheme() === 'dark';
-
   return (
-    <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
-    </SafeAreaProvider>
+    <GestureHandlerRootView style={styles.container}>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <SafeAreaProvider style={styles.container}>
+            <AppNavigator />
+          </SafeAreaProvider>
+        </AuthProvider>
+      </QueryClientProvider>
+    </GestureHandlerRootView>
   );
 }
 
-function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
-
-  return (
-    <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
-      />
-    </View>
-  );
-}
+export default App;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
 });
-
-export default App;
